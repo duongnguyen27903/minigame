@@ -7,23 +7,17 @@ import TextField from '@mui/material/TextField';
 import Link from '@mui/material/Link';
 import Grid from '@mui/material/Grid';
 import Box from '@mui/material/Box';
-import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import Typography from '@mui/material/Typography';
-import Container from '@mui/material/Container';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import anh from 'F:/minigame/src/assets/Eula3.jpg'
 import Paper from '@mui/material/Paper';
 
-
-
 const theme = createTheme();
 
-function getUser(){
-  const data = localStorage.getItem('token');
-  return data;
-}
-
 const Account = () => {
+
+  const user = localStorage.getItem('token');
+  const navigate = useNavigate();
   
   const handleSubmit = (event) => {
     event.preventDefault();
@@ -35,13 +29,14 @@ const Account = () => {
       lastName: data.get('lastName')
     });
   };
-  const user = getUser();
-  const navigate = useNavigate()
-  if( user === null ){ navigate('/signin') }
-  console.log(JSON.parse(user).email);
+  
+  React.useEffect(()=>{
+    if( user === null ){navigate('/signin')}
+  })
+
   return (
     <ThemeProvider theme={theme}>
-      <Grid container component="main" sx={{ height: '100vh' }}>
+      { user && <Grid container component="main" sx={{ height: '100vh' }}>
         <CssBaseline />
         
         <Grid item xs={12} sm={8} md={5} component={Paper} elevation={6} square>
@@ -55,10 +50,11 @@ const Account = () => {
             }}
           >
             <Avatar sx={{ m: 1, bgcolor: 'secondary.main' }}>
-              {JSON.parse(user).email[0].toUpperCase()}
+              { user && JSON.parse(user).email[0].toUpperCase()}
+              {console.log(user)}
             </Avatar>
             <Typography component="h1" variant="h5">
-              {JSON.parse(user).email.toUpperCase()}
+              { user && JSON.parse(user).email.toUpperCase()}
             </Typography>
             <Box component="form" noValidate onSubmit={handleSubmit} sx={{ mt: 1 }}>
               <TextField
@@ -70,7 +66,7 @@ const Account = () => {
                 name="email"
                 autoComplete="email"
                 autoFocus
-                value={JSON.parse(user).email}
+                defaultValue={JSON.parse(user).email}
               />
               <TextField
                 margin="normal"
@@ -81,6 +77,7 @@ const Account = () => {
                 type="password"
                 id="password"
                 autoComplete="current-password"
+                defaultValue={JSON.parse(user).password}
               />
               <Button
                 type="submit"
@@ -88,17 +85,17 @@ const Account = () => {
                 variant="contained"
                 sx={{ mt: 3, mb: 2 }}
               >
-                Sign In
+                Verify
               </Button>
-              <Grid container>
-                <Grid item xs>
-                  <Link href="#" variant="body2">
-                    Forgot password?
-                  </Link>
-                </Grid>
-                <Grid item>
-                  <Link href="/signup" variant="body2">
-                    {"Don't have an account? Sign Up"}
+              <Grid
+                container
+                direction="row"
+                justifyContent="center"
+                alignItems="stretch"
+              >
+                <Grid item >
+                  <Link href="/" variant="body2">
+                    Go back Home !!!
                   </Link>
                 </Grid>
               </Grid>
@@ -119,7 +116,7 @@ const Account = () => {
             backgroundPosition: 'center',
           }}
         />
-      </Grid>
+      </Grid>}
     </ThemeProvider>
   );
 }
