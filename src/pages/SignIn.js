@@ -11,19 +11,30 @@ import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import Typography from '@mui/material/Typography';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import anh from 'F:/minigame/src/assets/EI.jpg'
+import { useMutation } from 'react-query';
+import { signin } from '../api/api';
 
 const theme = createTheme();
 
 export default function SignInSide() {
 
+  const [signinform, setSigninForm] = React.useState({
+    username : '',
+    password : ''
+  })
+
+  const { mutate } = useMutation(
+    (signinform)=>signin(signinform)
+  )
+
   const handleSubmit = (event) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
-    const form = {
-      email: data.get('email'),
+    setSigninForm({
+      username: data.get('username'),
       password: data.get('password'),
-    }
-    localStorage.setItem('token',JSON.stringify(form));
+    })
+    mutate(signinform)
   };
 
   return (
@@ -65,10 +76,10 @@ export default function SignInSide() {
                 margin="normal"
                 required
                 fullWidth
-                id="email"
-                label="Email Address"
-                name="email"
-                autoComplete="email"
+                id="username"
+                label="Username"
+                name="username"
+                autoComplete="username"
                 autoFocus
               />
               <TextField

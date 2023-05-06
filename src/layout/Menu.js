@@ -1,8 +1,13 @@
-import { ArrowLeftOnRectangleIcon, ChatBubbleBottomCenterTextIcon, UserCircleIcon } from '@heroicons/react/24/solid'
+import { ArrowLeftOnRectangleIcon, ChatBubbleBottomCenterTextIcon, UserCircleIcon, AdjustmentsHorizontalIcon } from '@heroicons/react/24/solid'
 
 import tictactoe from 'F:/minigame/src/assets/tictactoe.jpg'
 
 export const Menu = [
+	{
+		path : '/admin',
+		icon : <AdjustmentsHorizontalIcon className='h-10 w-10' />,
+		name : "Admin"
+	},
 	{
 		path : '/account',
 		icon : <UserCircleIcon className='h-10 w-10' />,
