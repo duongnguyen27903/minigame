@@ -6,10 +6,6 @@ const api = axios.create({
     headers: { 'Content-Type' : 'application/json' }
   });
 
-export const signup=({username, password, avatar, role})=>{
-    api.post('/login/signin',{}).then((res) => res.data).finally();
-}
-
 export const signin = async ({username,password}) =>{
     if( username !== '' && password !== '' )
     return api.post('login/signin',{username : username, password : password}).then(res=>res.data)

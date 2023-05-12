@@ -23,18 +23,23 @@ export default function SignInSide() {
     password : ''
   })
 
-  const { mutate } = useMutation(
-    (signinform)=>signin(signinform)
+  const { mutate,data,isSuccess } = useMutation(
+    (signinform)=>signin(signinform),
   )
 
   const handleSubmit = (event) => {
     event.preventDefault();
-    const data = new FormData(event.currentTarget);
-    setSigninForm({
-      username: data.get('username'),
-      password: data.get('password'),
+    // const data = new FormData(event.currentTarget);
+    // setSigninForm({
+    //   username: data.get('username'),
+    //   password: data.get('password'),
+    // })
+    mutate(signinform,{
+      onSuccess : ( data )=>{localStorage.setItem('accessToken',data.accessToken)}
+        // 
+        
+      
     })
-    mutate(signinform)
   };
 
   return (
@@ -72,25 +77,30 @@ export default function SignInSide() {
               Sign in
             </Typography>
             <Box component="form" noValidate onSubmit={handleSubmit} sx={{ mt: 1 }}>
+              {console.log(signinform)}
               <TextField
                 margin="normal"
                 required
                 fullWidth
+                value={signinform.username}
                 id="username"
                 label="Username"
                 name="username"
                 autoComplete="username"
                 autoFocus
+                onChange={(e)=>{setSigninForm({...signinform, username : e.target.value })}}
               />
               <TextField
                 margin="normal"
                 required
                 fullWidth
+                value={signinform.password}
                 name="password"
                 label="Password"
                 type="password"
                 id="password"
                 autoComplete="current-password"
+                onChange={(e)=>{setSigninForm({...signinform, [e.target.name] : e.target.value})}}
               />
               <Button
                 type="submit"
