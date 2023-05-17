@@ -13,17 +13,19 @@ import { createTheme, ThemeProvider } from '@mui/material/styles';
 import anh from 'F:/minigame/src/assets/EI.jpg'
 import { useMutation } from 'react-query';
 import { signin } from '../api/api';
+import { useNavigate } from 'react-router-dom';
 
 const theme = createTheme();
 
 export default function SignInSide() {
 
+  const navigate = useNavigate();
   const [signinform, setSigninForm] = React.useState({
     username : '',
     password : ''
   })
 
-  const { mutate,data,isSuccess } = useMutation(
+  const { mutate } = useMutation(
     (signinform)=>signin(signinform),
   )
 
@@ -35,10 +37,11 @@ export default function SignInSide() {
     //   password: data.get('password'),
     // })
     mutate(signinform,{
-      onSuccess : ( data )=>{localStorage.setItem('accessToken',data.accessToken)}
-        // 
-        
-      
+      onSuccess : ( data )=>{
+        localStorage.setItem('accessToken',data.accessToken);
+        localStorage.setItem('refreshToken',data.refreshToken);
+        navigate('/message');
+      }
     })
   };
 

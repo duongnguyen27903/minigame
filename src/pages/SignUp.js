@@ -10,23 +10,53 @@ import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
+import { FormControl, InputLabel, MenuItem, Select } from '@mui/material';
+import { useMutation } from 'react-query';
+import { signup } from '../api/api';
+import { useNavigate } from 'react-router-dom';
 
 const theme = createTheme();
 
 export default function SignUp() {
+
+  const navigate = useNavigate();
+
+  const [signupForm,setSignupForm] = React.useState({
+    username : '',
+    password : '',
+    name : '',
+    avatar : '',
+    role : '',
+  })
+
+  const handleChange = (e) => {
+    setSignupForm({...signupForm, [e.target.name] : e.target.value })
+  }
+
+  const { mutate } = useMutation(
+    (signupForm) => signup(signupForm),
+  )
+
   const handleSubmit = (event) => {
     event.preventDefault();
-    const data = new FormData(event.currentTarget);
-    console.log({
-      email: data.get('email'),
-      password: data.get('password'),
-      firstName: data.get('firstName'),
-      lastName: data.get('lastName')
-    });
+    mutate(signupForm,
+      {
+        onSuccess : () =>{
+          navigate('/signin')
+        }
+      }
+    )
   };
+
+
+  // const previewAvatar = (e) =>{
+  //   const file = e.target.files;
+  //   console.log(URL.createObjectURL(file[0]));
+  // }
 
   return (
     <ThemeProvider theme={theme}>
+      {console.log(signupForm)}
       <Container component="main" maxWidth="xs">
         <CssBaseline />
         <Box
@@ -40,40 +70,34 @@ export default function SignUp() {
           <Avatar sx={{ m: 1, bgcolor: 'secondary.main' }}>
             <LockOutlinedIcon />
           </Avatar>
+          {/* <Button
+            variant="contained"
+            component="label"
+          >
+            Upload File
+            <input
+              type="file"
+              hidden={true}
+              accept="image/*"
+              onChange={previewAvatar}
+            />
+          </Button> */}
+          {/* <input type='file' multiple onChange={previewAvatar} /> */}
           <Typography component="h1" variant="h5">
             Sign up
           </Typography>
           <Box component="form" noValidate onSubmit={handleSubmit} sx={{ mt: 3 }}>
             <Grid container spacing={2}>
-              <Grid item xs={12} sm={6}>
-                <TextField
-                  autoComplete="given-name"
-                  name="firstName"
-                  required
-                  fullWidth
-                  id="firstName"
-                  label="First Name"
-                  autoFocus
-                />
-              </Grid>
-              <Grid item xs={12} sm={6}>
+            <Grid item xs={12}>
                 <TextField
                   required
                   fullWidth
-                  id="lastName"
-                  label="Last Name"
-                  name="lastName"
-                  autoComplete="family-name"
-                />
-              </Grid>
-              <Grid item xs={12}>
-                <TextField
-                  required
-                  fullWidth
-                  id="email"
-                  label="Email Address"
-                  name="email"
-                  autoComplete="email"
+                  value={signupForm.username}
+                  id="username"
+                  label="Username"
+                  name="username"
+                  autoComplete="username"
+                  onChange={handleChange}
                 />
               </Grid>
               <Grid item xs={12}>
@@ -81,12 +105,44 @@ export default function SignUp() {
                   required
                   fullWidth
                   name="password"
+                  value={signupForm.password}
                   label="Password"
                   type="password"
                   id="password"
                   autoComplete="new-password"
+                  onChange={handleChange}
                 />
               </Grid>
+              <Grid item xs={12} sm={6}>
+                <TextField
+                  autoComplete="given-name"
+                  name="name"
+                  required
+                  fullWidth
+                  id="name"
+                  label="Name"
+                  value={signupForm.name}
+                  autoFocus
+                  onChange={handleChange}
+                />
+              </Grid>
+              <Grid item xs={12} sm={6}>
+                <FormControl fullWidth>
+                  <InputLabel id="demo-simple-select-label">Role</InputLabel>
+                  <Select
+                    labelId="demo-simple-select-label"
+                    id="demo-simple-select"
+                    name='role'
+                    value={signupForm.role}
+                    label="Role"
+                    onChange={handleChange}
+                  >
+                    <MenuItem value={'Admin'}>Admin</MenuItem>
+                    <MenuItem value={'User'}>User</MenuItem>
+                  </Select>
+                </FormControl>
+              </Grid>
+              
             </Grid>
             <Button
               type="submit"

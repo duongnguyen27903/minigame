@@ -11,6 +11,11 @@ export const signin = async ({username,password}) =>{
     return api.post('login/signin',{username : username, password : password}).then(res=>res.data)
 }
 
+export const signup = async ({username,password,name,avatar,role}) =>{
+    if( username !== '' && password !== '' && name !=='' && role !== '')
+	return api.post(`login/signup?role=${role}`,{username : username, password : password, name: name, avatar: avatar}).then(res=>res.data)
+}
+
 
 
 

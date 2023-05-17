@@ -60,7 +60,7 @@ const Groups = ( {group} ) =>{
 }
 
 const Message = () => { 
-    const user = localStorage.getItem('token')
+    const user = localStorage.getItem('accessToken')
     const navigate = useNavigate();
 
     React.useEffect(()=>{
