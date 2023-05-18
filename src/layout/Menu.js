@@ -1,4 +1,4 @@
-import { ArrowLeftOnRectangleIcon, ChatBubbleBottomCenterTextIcon, UserCircleIcon, AdjustmentsHorizontalIcon } from '@heroicons/react/24/solid'
+import { ArrowLeftOnRectangleIcon, ChatBubbleBottomCenterTextIcon, UserCircleIcon } from '@heroicons/react/24/solid'
 
 import tictactoe from 'F:/minigame/src/assets/tictactoe.jpg'
 
