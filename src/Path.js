@@ -15,7 +15,6 @@ const Path = () => {
         <Route path='/signin' element={<SignInSide />} />
         <Route path='/signup' element={<SignUp />} />
         <Route path='/message' element={<Message />} />
-        <Route path='/admin' element={<Admin />} />
     </Routes>
   )
 }
