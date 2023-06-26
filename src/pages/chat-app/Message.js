@@ -5,7 +5,7 @@ import Box from "@mui/material/Box";
 import Grid from "@mui/material/Grid";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import io from "socket.io-client";
-import SearchBar from "../layout/SearchBar";
+import SearchBar from "../../layout/SearchBar";
 import { Avatar } from "@mui/material";
 import { MessagePath } from "./MessagePath";
 
@@ -80,7 +80,8 @@ const Message = () => {
   const [group, setGroup] = React.useState([]);
 
   React.useEffect(() => {
-    socket.emit("loadGroup");
+    const account = JSON.parse(localStorage.getItem("account"));
+    socket.emit("loadGroup", account.userId);
     socket.on("groups", (data) => {
       setGroup(data);
     });
@@ -115,25 +116,6 @@ const Message = () => {
           </Box>
         </Grid>
         <Grid item xs={8}>
-          {/* <div className='h-96 overflow-y-scroll scroll-smooth'ref={ref} >
-                    {text && 
-                        <ul >
-                            {text.map((data,index)=>{
-                                return (
-                                    <li key={index}>{data}</li>
-                                );
-                            })}
-                        </ul>
-                    }
-                    </div>
-                    <div className='flex flex-row '>
-                        <input onChange={(e)=>{setContent(e.target.value)}} value={content} placeholder='type something ...' />
-                        <button onClick={(e)=>{
-                            e.preventDefault();
-                            socket.emit('create',content);
-                            setContent('');
-                        }}>send</button>
-                    </div> */}
           <MessagePath />
         </Grid>
       </Grid>

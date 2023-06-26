@@ -1,20 +1,24 @@
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { socket } from "./Message";
-import { useChatScroll } from "../hooks/useChatScroll";
+import { useChatScroll } from "../../hooks/useChatScroll";
 
 export const BoxChat = () => {
   const { groupname } = useParams();
-
+  console.log(groupname);
   const [content, setContent] = useState([]);
   const [sendMes, setSendMes] = useState("");
 
   useEffect(() => {
     socket.emit("getMessage", groupname);
-    socket.on("content", (data) => {
-      setContent(data);
-    });
   }, [groupname]);
+
+  useEffect(() => {
+    socket.on("content", (...data) => {
+      // console.log(groupname);
+      setContent(data[0]);
+    });
+  }, []);
   useEffect(() => {
     socket.on("onchat", (groupname, mes) => {
       console.log(groupname, mes);
@@ -33,12 +37,13 @@ export const BoxChat = () => {
     <div className="h-full flex flex-col justify-between">
       <div className="m-2 font-bold text-xl">{groupname}</div>
       <hr />
+      {console.log(groupname)}
       <div ref={ref} className="grow overflow-y-scroll scroll-smooth">
         {content &&
           content.map((mes, index) => {
             return (
-              <div>
-                <Message key={index} mes={mes} />
+              <div key={index}>
+                <Message mes={mes} />
               </div>
             );
           })}
