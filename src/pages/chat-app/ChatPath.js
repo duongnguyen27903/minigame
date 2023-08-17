@@ -3,7 +3,7 @@ import { Route, Routes } from "react-router-dom";
 import anh from "F:/minigame/src/assets/EI.jpg";
 import { BoxChat } from "./BoxChat";
 
-export const MessagePath = () => {
+export const ChatPath = () => {
   return (
     <Routes>
       <Route

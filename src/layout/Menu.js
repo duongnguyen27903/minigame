@@ -13,9 +13,9 @@ export const Menu = [
     name: "Account",
   },
   {
-    path: "/message",
+    path: "/chat",
     icon: <ChatBubbleBottomCenterTextIcon className="h-10 w-10" />,
-    name: "Message",
+    name: "Chat",
   },
   {
     path: "/tic-tac-toe",

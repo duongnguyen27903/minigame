@@ -7,7 +7,7 @@ import { createTheme, ThemeProvider } from "@mui/material/styles";
 import io from "socket.io-client";
 import SearchBar from "../../layout/SearchBar";
 import { Avatar } from "@mui/material";
-import { MessagePath } from "./MessagePath";
+import { ChatPath } from "./ChatPath";
 
 const theme = createTheme();
 
@@ -63,7 +63,7 @@ const Groups = ({ group }) => {
   );
 };
 
-const Message = () => {
+const Chat = () => {
   const user = localStorage.getItem("accessToken");
   const navigate = useNavigate();
 
@@ -116,11 +116,11 @@ const Message = () => {
           </Box>
         </Grid>
         <Grid item xs={8}>
-          <MessagePath />
+          <ChatPath />
         </Grid>
       </Grid>
     </ThemeProvider>
   );
 };
 
-export default Message;
+export default Chat;
