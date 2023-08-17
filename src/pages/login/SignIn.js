@@ -20,7 +20,7 @@ const theme = createTheme();
 export default function SignInSide() {
   const navigate = useNavigate();
   const [signinform, setSigninForm] = React.useState({
-    username: "",
+    email: "",
     password: "",
   });
 
@@ -28,17 +28,11 @@ export default function SignInSide() {
 
   const handleSubmit = (event) => {
     event.preventDefault();
-    // const data = new FormData(event.currentTarget);
-    // setSigninForm({
-    //   username: data.get('username'),
-    //   password: data.get('password'),
-    // })
     mutate(signinform, {
       onSuccess: (data) => {
         localStorage.setItem("accessToken", data.accessToken);
-        localStorage.setItem("refreshToken", data.refreshToken);
-        localStorage.setItem("account", JSON.stringify(data.account));
-        navigate("/message");
+        localStorage.setItem("user", JSON.stringify(data.user));
+        navigate("/chat");
       },
     });
   };
@@ -85,19 +79,18 @@ export default function SignInSide() {
               onSubmit={handleSubmit}
               sx={{ mt: 1 }}
             >
-              {console.log(signinform)}
               <TextField
                 margin="normal"
                 required
                 fullWidth
-                value={signinform.username}
-                id="username"
-                label="Username"
-                name="username"
-                autoComplete="username"
+                value={signinform.email}
+                id="email"
+                label="email"
+                name="email"
+                autoComplete="email"
                 autoFocus
                 onChange={(e) => {
-                  setSigninForm({ ...signinform, username: e.target.value });
+                  setSigninForm({ ...signinform, email: e.target.value });
                 }}
               />
               <TextField

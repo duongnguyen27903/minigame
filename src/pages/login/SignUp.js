@@ -21,10 +21,10 @@ export default function SignUp() {
   const navigate = useNavigate();
 
   const [signupForm, setSignupForm] = React.useState({
-    username: "",
+    email: "",
     password: "",
     name: "",
-    avatar: "",
+    phone_number: "",
     role: "",
   });
 
@@ -50,7 +50,6 @@ export default function SignUp() {
 
   return (
     <ThemeProvider theme={theme}>
-      {console.log(signupForm)}
       <Container component="main" maxWidth="xs">
         <CssBaseline />
         <Box
@@ -91,11 +90,11 @@ export default function SignUp() {
                 <TextField
                   required
                   fullWidth
-                  value={signupForm.username}
-                  id="username"
-                  label="Username"
-                  name="username"
-                  autoComplete="username"
+                  value={signupForm.email}
+                  id="email"
+                  label="Email"
+                  name="email"
+                  autoComplete="email"
                   onChange={handleChange}
                 />
               </Grid>
@@ -112,7 +111,7 @@ export default function SignUp() {
                   onChange={handleChange}
                 />
               </Grid>
-              <Grid item xs={12} sm={6}>
+              <Grid item xs={12}>
                 <TextField
                   autoComplete="given-name"
                   name="name"
@@ -121,6 +120,18 @@ export default function SignUp() {
                   id="name"
                   label="Name"
                   value={signupForm.name}
+                  autoFocus
+                  onChange={handleChange}
+                />
+              </Grid>
+              <Grid item xs={12} sm={6}>
+                <TextField
+                  name="phone_number"
+                  required
+                  fullWidth
+                  id="phone_number"
+                  label="Phone number"
+                  value={signupForm.phone_number}
                   autoFocus
                   onChange={handleChange}
                 />
@@ -136,8 +147,8 @@ export default function SignUp() {
                     label="Role"
                     onChange={handleChange}
                   >
-                    <MenuItem value={"Admin"}>Admin</MenuItem>
-                    <MenuItem value={"User"}>User</MenuItem>
+                    <MenuItem value={"admin"}>Admin</MenuItem>
+                    <MenuItem value={"user"}>User</MenuItem>
                   </Select>
                 </FormControl>
               </Grid>
