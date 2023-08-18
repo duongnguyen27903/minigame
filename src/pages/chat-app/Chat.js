@@ -10,97 +10,48 @@ import { Avatar } from "@mui/material";
 import { ChatPath } from "./ChatPath";
 
 const theme = createTheme();
-
 export const socket = io("http://localhost:3000", { timeout: 10000 });
-
-// const fakeGroup = [
-//   {
-//     avatar: "a",
-//     name: "group1",
-//     message: "chao ba con co bac",
-//   },
-//   {
-//     avatar: "a",
-//     name: "group1",
-//     message: "chao ba con co bac",
-//   },
-//   {
-//     avatar: "a",
-//     name: "group1",
-//     message: "chao ba con co bac",
-//   },
-//   {
-//     avatar: "a",
-//     name: "group1",
-//     message: "chao ba con co bac",
-//   },
-//   {
-//     avatar: "a",
-//     name: "group1",
-//     message: "chao ba con co bac",
-//   },
-// ];
 
 const Groups = ({ group }) => {
   const navigate = useNavigate();
-
   return (
     <div
       className="flex flex-row place-items-center grow hover:border hover:bg-black/25 hover:shadow-lg hover:shadow-blue-500/50"
       onClick={() => {
-        navigate(`/message/${group.name}`);
+        navigate(`/chat/${group.group_id}`);
       }}
     >
       <div className="m-4">
         <Avatar sx={{ height: 54, width: 54, backgroundColor: "purple" }}>
-          {group.name[0].toUpperCase()}
+          {group && group.group_name[0].toUpperCase()}
         </Avatar>
       </div>
       <div className="grow">
-        <p className="font-semibold">{group.name}</p>
+        <p className="font-semibold">{group.group_name}</p>
       </div>
     </div>
   );
 };
 
 const Chat = () => {
-  const user = localStorage.getItem("accessToken");
+  const user = JSON.parse(localStorage.getItem("user"));
   const navigate = useNavigate();
-
   React.useEffect(() => {
     if (user === null) {
       navigate("/signin");
     }
-  }, [user, navigate]);
+  }, [navigate, user]);
 
-  // React.useEffect(()=>{
-  //     socket.emit('connection','hello');//sử dụng socket.emit để gọi đến các event được tạo trong backend
-  //     socket.emit('getMessage','getdata')
-  // },[])
-  const [group, setGroup] = React.useState([]);
+  const [groups, setGroups] = React.useState([]);
 
   React.useEffect(() => {
-    const account = JSON.parse(localStorage.getItem("account"));
-    socket.emit("loadGroup", account.userId);
-    socket.on("groups", (data) => {
-      setGroup(data);
-    });
+    if (user) {
+      socket.emit("load_groups", { id: user.id });
+      socket.on("groups", (data) => {
+        setGroups(data);
+      });
+    }
   }, []);
-
-  // React.useEffect(()=>{
-  //     socket.emit('getMessage')
-  //     socket.on('user-chat',(data)=>{
-  //         console.log(data);
-  //         setText(data);
-  //     })
-
-  // },[])
-
-  // React.useEffect(()=>{
-  //     socket.on('onchat',(data)=>{
-  //         setText([...text,data])
-  //     })
-  // },[text])
 
   return (
     <ThemeProvider theme={theme}>
@@ -109,8 +60,8 @@ const Chat = () => {
         <Grid item xs={4}>
           <SearchBar />
           <Box component={"div"}>
-            {group &&
-              group.map((groups) => {
+            {groups &&
+              groups.map((groups) => {
                 return <Groups key={groups.id} group={groups} />;
               })}
           </Box>
