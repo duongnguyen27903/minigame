@@ -30,7 +30,7 @@ export default function SignInSide() {
     event.preventDefault();
     mutate(signinform, {
       onSuccess: (data) => {
-        localStorage.setItem("accessToken", data.accessToken);
+        localStorage.setItem("accessToken", JSON.stringify(data.accessToken));
         localStorage.setItem("user", JSON.stringify(data.user));
         navigate("/chat");
       },

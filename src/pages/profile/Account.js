@@ -1,4 +1,5 @@
-import * as React from "react";
+import React from "react";
+import { useEffect } from "react";
 import Avatar from "@mui/material/Avatar";
 import Button from "@mui/material/Button";
 import CssBaseline from "@mui/material/CssBaseline";
@@ -19,22 +20,40 @@ import CloseIcon from "@mui/icons-material/Close";
 const theme = createTheme();
 
 const Account = () => {
-  const user = localStorage.getItem("user");
+  const user = JSON.parse(localStorage.getItem("user"));
   const navigate = useNavigate();
-  React.useEffect(() => {
-    if (!user) {
+  useEffect(() => {
+    if (user === null) {
       navigate("/signin");
     }
-  }, [user, navigate]);
+  }, [navigate, user]);
 
   const [open, setOpen] = React.useState(false);
 
-  const [update, setUpdate] = React.useState({
-    id: JSON.parse(user).id,
-    password: JSON.parse(user).password,
-    name: JSON.parse(user).name,
-    phone_number: JSON.parse(user).phone_number,
+  const [update, setUpdate] = React.useState(() => {
+    if (user) {
+      return {
+        id: user.id,
+        password: user.password,
+        name: user.name,
+        phone_number: user.phone_number,
+      };
+    }
+    return {
+      id: "",
+      password: "",
+      name: "",
+      phone_number: "",
+    };
   });
+  // if (user) {
+  //   setUpdate({
+  //     id: user.id,
+  //     password: user.password,
+  //     name: user.name,
+  //     phone_number: user.phone_number,
+  //   });
+  // }
 
   const handleChange = (e) => {
     setUpdate({ ...update, [e.target.name]: e.target.value });
@@ -75,155 +94,186 @@ const Account = () => {
   );
 
   return (
-    <ThemeProvider theme={theme}>
-      <Grid container component="main" sx={{ height: "100vh" }}>
-        <CssBaseline />
-        <Grid
-          item
-          xs={12}
-          sm={8}
-          md={5}
-          component={Paper}
-          elevation={24}
-          square
-        >
-          <Box
-            sx={{
-              my: 8,
-              mx: 4,
-              display: "flex",
-              flexDirection: "column",
-              alignItems: "center",
-            }}
-          >
-            <Avatar sx={{ m: 1, bgcolor: "secondary.main" }}>
-              {JSON.parse(user).name[0].toUpperCase()}
-            </Avatar>
-            <Typography component="h1" variant="h5">
-              {JSON.parse(user).name.toUpperCase()}
-            </Typography>
+    <div>
+      {user && (
+        <ThemeProvider theme={theme}>
+          <Grid container component="main" sx={{ height: "100vh" }}>
+            <CssBaseline />
             <Grid
-              container
-              justifyContent={"center"}
-              // onSubmit={handleSubmit}
-              sx={{ mt: 1 }}
+              item
+              xs={12}
+              sm={8}
+              md={5}
+              component={Paper}
+              elevation={24}
+              square
             >
-              <Grid
-                container
-                direction={"column"}
-                justifyContent={"center"}
-                spacing={2}
+              <Box
+                sx={{
+                  my: 8,
+                  mx: 4,
+                  display: "flex",
+                  flexDirection: "column",
+                  alignItems: "center",
+                }}
               >
-                <Grid item sx={12}>
-                  <TextField
-                    margin="normal"
-                    required
-                    fullWidth
-                    id="email"
-                    label="Email"
-                    name="email"
-                    autoComplete="email"
-                    disabled
-                    autoFocus
-                    defaultValue={JSON.parse(user).email}
+                <Avatar sx={{ m: 1, bgcolor: "secondary.main" }}>
+                  {user.name[0].toUpperCase()}
+                </Avatar>
+                <Typography component="h1" variant="h5">
+                  {user.name[0].toUpperCase()}
+                </Typography>
+                <Grid
+                  container
+                  justifyContent={"center"}
+                  // onSubmit={handleSubmit}
+                  sx={{ mt: 1 }}
+                >
+                  <Grid
+                    container
+                    direction={"column"}
+                    justifyContent={"center"}
+                    spacing={2}
+                  >
+                    <Grid item sx={12}>
+                      <TextField
+                        margin="normal"
+                        required
+                        fullWidth
+                        id="email"
+                        label="Email"
+                        name="email"
+                        autoComplete="email"
+                        disabled
+                        autoFocus
+                        defaultValue={user.email}
+                      />
+                      <TextField
+                        margin="normal"
+                        required
+                        fullWidth
+                        name="password"
+                        label="Password"
+                        type="password"
+                        id="password"
+                        autoComplete="current-password"
+                        value={update.password}
+                        onChange={handleChange}
+                      />
+                      <TextField
+                        margin="normal"
+                        required
+                        fullWidth
+                        id="name"
+                        label="Name"
+                        name="name"
+                        autoFocus
+                        value={update.name}
+                        onChange={handleChange}
+                      />
+                      <TextField
+                        margin="normal"
+                        required
+                        fullWidth
+                        id="phone_number"
+                        label="Phone number"
+                        name="phone_number"
+                        autoFocus
+                        value={update.phone_number}
+                        onChange={handleChange}
+                      />
+                      <TextField
+                        margin="normal"
+                        required
+                        fullWidth
+                        id="createdAt"
+                        label="Date created"
+                        name="createdAt"
+                        disabled
+                        autoFocus
+                        defaultValue={user.createdAt.split("T")[0]}
+                      />
+                    </Grid>
+                  </Grid>
+                  <Button
+                    type="submit"
+                    variant="contained"
+                    sx={{ m: 2, width: "50%", alignSelf: "center" }}
+                    onClick={handleClick}
+                  >
+                    Verify
+                  </Button>
+                  <Button
+                    variant="contained"
+                    sx={{ m: 2, width: "50%", alignSelf: "center" }}
+                    onClick={() => {
+                      localStorage.clear();
+                      navigate("/");
+                    }}
+                  >
+                    Sign out
+                  </Button>
+                  <Snackbar
+                    open={open}
+                    autoHideDuration={6000}
+                    onClose={handleClose}
+                    message="Update your account successfully"
+                    action={action}
                   />
-                  <TextField
-                    margin="normal"
-                    required
-                    fullWidth
-                    name="password"
-                    label="Password"
-                    type="password"
-                    id="password"
-                    autoComplete="current-password"
-                    value={update.password}
-                    onChange={handleChange}
-                  />
-                  <TextField
-                    margin="normal"
-                    required
-                    fullWidth
-                    id="name"
-                    label="Name"
-                    name="name"
-                    autoFocus
-                    value={update.name}
-                    onChange={handleChange}
-                  />
-                  <TextField
-                    margin="normal"
-                    required
-                    fullWidth
-                    id="phone_number"
-                    label="Phone number"
-                    name="phone_number"
-                    autoFocus
-                    value={update.phone_number}
-                    onChange={handleChange}
-                  />
-                  <TextField
-                    margin="normal"
-                    required
-                    fullWidth
-                    id="createdAt"
-                    label="Date created"
-                    name="createdAt"
-                    disabled
-                    autoFocus
-                    defaultValue={JSON.parse(user).createdAt.split("T")[0]}
-                  />
+                  <Grid
+                    container
+                    direction="row"
+                    justifyContent="center"
+                    alignItems="stretch"
+                  >
+                    <Grid item>
+                      <Link href="/" variant="body2">
+                        Go back Home !!!
+                      </Link>
+                    </Grid>
+                  </Grid>
                 </Grid>
-              </Grid>
-              <Button
-                type="submit"
-                variant="contained"
-                sx={{ mt: 3, mb: 2, width: "50%", alignSelf: "center" }}
-                onClick={handleClick}
-              >
-                Verify
-              </Button>
-              <Snackbar
-                open={open}
-                autoHideDuration={6000}
-                onClose={handleClose}
-                message="Update your account successfully"
-                action={action}
-              />
-              <Grid
-                container
-                direction="row"
-                justifyContent="center"
-                alignItems="stretch"
-              >
-                <Grid item>
-                  <Link href="/" variant="body2">
-                    Go back Home !!!
-                  </Link>
-                </Grid>
-              </Grid>
+              </Box>
             </Grid>
-          </Box>
-        </Grid>
 
-        <Grid
-          item
-          xs={false}
-          sm={4}
-          md={7}
-          sx={{
-            backgroundImage: `url(${anh})`,
-            backgroundRepeat: "no-repeat",
-            backgroundColor: (t) =>
-              t.palette.mode === "light"
-                ? t.palette.grey[50]
-                : t.palette.grey[900],
-            backgroundSize: "cover",
-            backgroundPosition: "center",
-          }}
-        />
-      </Grid>
-    </ThemeProvider>
+            <Grid
+              item
+              xs={false}
+              sm={4}
+              md={7}
+              sx={{
+                backgroundImage: `url(${anh})`,
+                backgroundRepeat: "no-repeat",
+                backgroundColor: (t) =>
+                  t.palette.mode === "light"
+                    ? t.palette.grey[50]
+                    : t.palette.grey[900],
+                backgroundSize: "cover",
+                backgroundPosition: "center",
+              }}
+            />
+          </Grid>
+        </ThemeProvider>
+      )}
+    </div>
   );
 };
 
 export default Account;
+
+// import React, { useEffect } from "react";
+// import { useNavigate } from "react-router-dom";
+
+// const Account = () => {
+//   const navigate = useNavigate();
+//   const user = localStorage.getItem("user");
+//   useEffect(() => {
+//     if (user === null) {
+//       navigate("/");
+//     }
+//   }, [navigate, user]);
+
+//   return <div>{user}</div>;
+// };
+
+// export default Account;

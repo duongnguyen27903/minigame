@@ -10,7 +10,7 @@ export const ChatPath = () => {
         path="/"
         element={<img className="min-h-screen" src={anh} alt="anh" />}
       />
-      <Route path="/:groupname" element={<BoxChat />} />
+      <Route path="/:id" element={<BoxChat />} />
     </Routes>
   );
 };
