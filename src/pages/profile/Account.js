@@ -23,7 +23,7 @@ const Account = () => {
   const user = JSON.parse(localStorage.getItem("user"));
   const navigate = useNavigate();
   useEffect(() => {
-    if (user === null) {
+    if (!user) {
       navigate("/signin");
     }
   }, [navigate, user]);
@@ -46,14 +46,6 @@ const Account = () => {
       phone_number: "",
     };
   });
-  // if (user) {
-  //   setUpdate({
-  //     id: user.id,
-  //     password: user.password,
-  //     name: user.name,
-  //     phone_number: user.phone_number,
-  //   });
-  // }
 
   const handleChange = (e) => {
     setUpdate({ ...update, [e.target.name]: e.target.value });

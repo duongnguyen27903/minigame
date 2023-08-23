@@ -8,26 +8,46 @@ import io from "socket.io-client";
 import SearchBar from "../../layout/SearchBar";
 import { Avatar } from "@mui/material";
 import { ChatPath } from "./ChatPath";
+import MoreHorizIcon from "@mui/icons-material/MoreHoriz";
+import { useMutation } from "react-query";
+import { delete_group } from "../../api/api";
 
 const theme = createTheme();
 export const socket = io("http://localhost:3000", { timeout: 10000 });
 
-const Groups = ({ group }) => {
+const Groups = ({ group, onClick }) => {
   const navigate = useNavigate();
+  const [open, setOpen] = React.useState(false);
   return (
-    <div
-      className="flex flex-row place-items-center grow hover:border hover:bg-black/25 hover:shadow-lg hover:shadow-blue-500/50"
-      onClick={() => {
-        navigate(`/chat/${group.group_id}`);
-      }}
-    >
+    <div className="flex flex-row place-items-center grow hover:border hover:bg-black/25 hover:shadow-lg hover:shadow-blue-500/50">
       <div className="m-4">
         <Avatar sx={{ height: 54, width: 54, backgroundColor: "purple" }}>
           {group && group.group_name[0].toUpperCase()}
         </Avatar>
       </div>
-      <div className="grow">
+      <div
+        className="grow cursor-pointer"
+        onClick={() => {
+          navigate(`/chat/${group.group_id}`);
+        }}
+      >
         <p className="font-semibold">{group.group_name}</p>
+      </div>
+      <div
+        className="relative cursor-pointer"
+        onClick={() => {
+          setOpen(!open);
+        }}
+      >
+        <MoreHorizIcon sx={{ mx: 2 }} />
+        <div
+          className={`absolute ${
+            open ? "block" : "hidden"
+          } bg-red-200 p-2 rounded-lg`}
+          onClick={onClick}
+        >
+          Delete
+        </div>
       </div>
     </div>
   );
@@ -53,6 +73,16 @@ const Chat = () => {
     }
   }, []);
 
+  const { mutate: delete_group_spec } = useMutation((id) => delete_group(id));
+
+  const handleClick = (id) => {
+    delete_group_spec(id, {
+      onSuccess: (data) => {
+        window.location.reload();
+      },
+    });
+  };
+
   return (
     <ThemeProvider theme={theme}>
       <Grid container spacing={2} component="main" sx={{ height: "100vh" }}>
@@ -62,7 +92,13 @@ const Chat = () => {
           <Box component={"div"}>
             {groups &&
               groups.map((groups) => {
-                return <Groups key={groups.id} group={groups} />;
+                return (
+                  <Groups
+                    key={groups.id}
+                    group={groups}
+                    onClick={() => handleClick(groups.group_id)}
+                  />
+                );
               })}
           </Box>
         </Grid>
